@@ -2,24 +2,25 @@ from telethon import TelegramClient, events
 import sqlite3, hashlib, os, asyncio
 
 # =============== НАСТРОЙКИ ===============
-api_id = int(os.getenv("API_ID"))          
+api_id = int(os.getenv("API_ID"))
 api_hash = os.getenv("API_HASH")
-bot_token = os.getenv("BOT_TOKEN")         
+bot_token = os.getenv("BOT_TOKEN")
+
 SOURCE_CHATS = [
-               -1001235383010,
-               -1001151684062,
-               -1001250730941,
-               -1001421793061,
-               -1002285316560
-    ]
+    -1001235383010,
+    -1001151684062,
+    -1001250730941,
+    -1001421793061,
+    -1002285316560
+]
+
 TARGET_CHAT = -1003323637756
-KEYWORDS = ["италия", "италию"]           
+KEYWORDS = ["италия", "италию"]
 # ========================================
 
-# Создаём TelegramClient с токеном бота
 client = TelegramClient("italy_watcher_session", api_id, api_hash)
 
-# База данных для защиты от дублей
+# ===== База данных от дублей =====
 def init_db():
     conn = sqlite3.connect("sent.db")
     conn.execute("CREATE TABLE IF NOT EXISTS sent (hash TEXT PRIMARY KEY)")
@@ -43,19 +44,20 @@ def mark_sent(text_hash):
 def hash_text(text):
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
+# ===== Обработчик сообщений =====
 @client.on(events.NewMessage(chats=SOURCE_CHATS))
 async def handler(event):
-  print("MESSAGE FROM:", event.chat_id, event.raw_text)
-  
-    text = event.raw_text.lower()
+    print("MESSAGE FROM:", event.chat_id, event.raw_text)
+
+    text = (event.raw_text or "").lower()
 
     if any(word in text for word in KEYWORDS):
         text_hash = hash_text(text)
-      
+
         if was_sent(text_hash):
             print("⏩ Уже было, пропускаю...")
             return
-          
+
         try:
             await client.forward_messages(TARGET_CHAT, event.message)
             mark_sent(text_hash)
@@ -63,6 +65,7 @@ async def handler(event):
         except Exception as e:
             print("⚠️ Ошибка пересылки:", e)
 
+# ===== Запуск =====
 async def main():
     init_db()
     print("Bot zapushen. Slushaet gruppu...")
@@ -71,6 +74,7 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
 
 
 
