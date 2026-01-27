@@ -12,7 +12,7 @@ SOURCE_CHATS = [
                -1001421793061,
                -1002285316560
     ]
-TARGET_CHAT = "https://t.me/+gabNeMUwv-plNDhi"
+TARGET_CHAT = -1003323637756
 KEYWORDS = ["италия", "италию"]           
 # ========================================
 
@@ -66,6 +66,7 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
 
 
 
