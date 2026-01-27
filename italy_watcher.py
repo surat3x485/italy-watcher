@@ -46,12 +46,16 @@ def hash_text(text):
 @client.on(events.NewMessage(chats=SOURCE_CHATS))
 async def handler(event):
   print("MESSAGE FROM:", event.chat_id, event.raw_text)
+  
     text = event.raw_text.lower()
+
     if any(word in text for word in KEYWORDS):
         text_hash = hash_text(text)
+      
         if was_sent(text_hash):
             print("⏩ Уже было, пропускаю...")
             return
+          
         try:
             await client.forward_messages(TARGET_CHAT, event.message)
             mark_sent(text_hash)
@@ -67,6 +71,7 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
 
 
 
