@@ -45,6 +45,7 @@ def hash_text(text):
 
 @client.on(events.NewMessage(chats=SOURCE_CHATS))
 async def handler(event):
+  print("MESSAGE FROM:", event.chat_id, event.raw_text)
     text = event.raw_text.lower()
     if any(word in text for word in KEYWORDS):
         text_hash = hash_text(text)
@@ -66,6 +67,7 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
 
 
 
