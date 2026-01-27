@@ -5,7 +5,13 @@ import sqlite3, hashlib, os, asyncio
 api_id = int(os.getenv("API_ID"))          
 api_hash = os.getenv("API_HASH")
 bot_token = os.getenv("BOT_TOKEN")         
-SOURCE_CHAT = "@TutGruz"                   
+SOURCE_CHAT = [
+               -1001235383010,
+               -1001151684062,
+               -1001250730941,
+               -1001421793061,
+               -1002285316560
+    ]
 TARGET_CHAT = "https://t.me/+gabNeMUwv-plNDhi"
 KEYWORDS = ["италия", "италию"]           
 # ========================================
@@ -37,7 +43,7 @@ def mark_sent(text_hash):
 def hash_text(text):
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
-@client.on(events.NewMessage(chats=SOURCE_CHAT))
+@client.on(events.NewMessage(chats=SOURCE_CHATS))
 async def handler(event):
     text = event.raw_text.lower()
     if any(word in text for word in KEYWORDS):
@@ -60,4 +66,5 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
 
