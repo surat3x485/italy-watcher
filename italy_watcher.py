@@ -5,7 +5,7 @@ import sqlite3, hashlib, os, asyncio
 api_id = int(os.getenv("API_ID"))          
 api_hash = os.getenv("API_HASH")
 bot_token = os.getenv("BOT_TOKEN")         
-SOURCE_CHAT = [
+SOURCE_CHATS = [
                -1001235383010,
                -1001151684062,
                -1001250730941,
@@ -66,5 +66,6 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
 
 
