@@ -4,7 +4,6 @@ import sqlite3, hashlib, os, asyncio
 # =============== НАСТРОЙКИ ===============
 api_id = int(os.getenv("API_ID"))
 api_hash = os.getenv("API_HASH")
-bot_token = os.getenv("BOT_TOKEN")
 
 SOURCE_CHATS = [
     -1001235383010,
@@ -18,9 +17,9 @@ TARGET_CHAT = -1003323637756
 KEYWORDS = ["италия", "италию"]
 # ========================================
 
-client = TelegramClient("italy_watcher_session", api_id, api_hash)
+client = TelegramClient("italy_user_session", api_id, api_hash)
 
-# ===== база от дублей =====
+# ===== База анти-дублей =====
 def init_db():
     conn = sqlite3.connect("sent.db")
     conn.execute("CREATE TABLE IF NOT EXISTS sent (hash TEXT PRIMARY KEY)")
@@ -44,7 +43,7 @@ def mark_sent(text_hash):
 def hash_text(text):
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
-# ===== обработчик сообщений =====
+# ===== СЛУШАЕМ СООБЩЕНИЯ =====
 @client.on(events.NewMessage(chats=SOURCE_CHATS))
 async def handler(event):
     print("MESSAGE FROM:", event.chat_id, event.raw_text)
@@ -61,19 +60,20 @@ async def handler(event):
         try:
             await client.forward_messages(TARGET_CHAT, event.message)
             mark_sent(text_hash)
-            print("✅ Новое сообщение переслано!")
+            print("✅ Переслано!")
         except Exception as e:
             print("⚠️ Ошибка пересылки:", e)
 
-# ===== запуск =====
+# ===== ЗАПУСК =====
 async def main():
     init_db()
-    print("Bot zapushen. Slushaet gruppu...")
-    await client.start(bot_token=bot_token)
+    print("Userbot запущен. Слушаю группы...")
+    await client.start()   # ← ВАЖНО: БЕЗ bot_token
     await client.run_until_disconnected()
 
 if __name__ == "__main__":
     asyncio.run(main())
+
 
 
 
