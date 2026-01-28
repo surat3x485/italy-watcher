@@ -20,7 +20,7 @@ KEYWORDS = ["италия", "италию"]
 
 client = TelegramClient("italy_watcher_session", api_id, api_hash)
 
-# ===== База данных от дублей =====
+# ===== база от дублей =====
 def init_db():
     conn = sqlite3.connect("sent.db")
     conn.execute("CREATE TABLE IF NOT EXISTS sent (hash TEXT PRIMARY KEY)")
@@ -44,7 +44,7 @@ def mark_sent(text_hash):
 def hash_text(text):
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
-# ===== Обработчик сообщений =====
+# ===== обработчик сообщений =====
 @client.on(events.NewMessage(chats=SOURCE_CHATS))
 async def handler(event):
     print("MESSAGE FROM:", event.chat_id, event.raw_text)
@@ -65,7 +65,7 @@ async def handler(event):
         except Exception as e:
             print("⚠️ Ошибка пересылки:", e)
 
-# ===== Запуск =====
+# ===== запуск =====
 async def main():
     init_db()
     print("Bot zapushen. Slushaet gruppu...")
@@ -74,6 +74,7 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
 
 
 
